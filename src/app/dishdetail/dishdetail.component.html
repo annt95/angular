@@ -41,7 +41,21 @@
         </mat-list-item>
       </mat-list>
   </div>
-
+<form novalidate [formGroup]="commentForm" (ngSubmit)="onSubmit()">
+      <p>
+        <mat-slider min="1" max="5" step="1" value="1"></mat-slider>
+        <mat-form-field class="half-width">
+          <input matInput formControlName="comment" placeholder="Comment" type="text" required>
+          <!-- <mat-error *ngIf="commentForm.comment">{{commentErrors.comment}}</mat-error> -->
+        </mat-form-field>
+        <mat-form-field class="half-width">
+          <input matInput formControlName="author" placeholder="Author" type="text" required>
+          <!-- <mat-error *ngIf="commentForm.author">{{commentErrors.author}}</mat-error> -->
+        </mat-form-field>
+      </p>
+     
+      <button type="submit" mat-button class="background-primary text-floral-white">Submit</button>
+    </form>
 </div>
 
 
