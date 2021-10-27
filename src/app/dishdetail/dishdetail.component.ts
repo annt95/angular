@@ -1,4 +1,4 @@
-import { Component, OnInit, Input,ViewChild } from '@angular/core';
+import { Component, OnInit, Input,ViewChild,Inject } from '@angular/core';
 import { Dish } from '../shared/dish';
 import { DishService } from '../services/dish.service';
 import { Params, ActivatedRoute } from '@angular/router';
@@ -41,7 +41,8 @@ export class DishdetailComponent implements OnInit {
   constructor(private dishservice: DishService,
     private route: ActivatedRoute,
     private location: Location,
-    private cm: FormBuilder
+    private cm: FormBuilder,
+    @Inject('BaseURL') public BaseURL
     ) {
       this.createCommentForm();
      }
@@ -58,30 +59,30 @@ export class DishdetailComponent implements OnInit {
       comment: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(25)] ],
       author: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(25)] ]
     });
-    //  this.commentForm.valueChanges
-    //    .subscribe(data => this.onValueChanged(data));
+     this.commentForm.valueChanges
+       .subscribe(data => this.onValueChanged(data));
 
-    // this.onValueChanged(); // (re)set validation messages now
+    this.onValueChanged(); // (re)set validation messages now
     }
-  //   onValueChanged(data?: any) {
-  //   if (!this.commentForm) { return; }
-  //   const form = this.commentForm;
-  //   for (const field in this.commentErrors) {
-  //     if (this.commentErrors.hasOwnProperty(field)) {
-  //       // clear previous error message (if any)
-  //       this.commentErrors[field] = '';
-  //       const control = form.get(field);
-  //       if (control && control.dirty && !control.valid) {
-  //         const messages = this.validationCommentMessages[field];
-  //         for (const key in control.errors) {
-  //           if (control.errors.hasOwnProperty(key)) {
-  //             this.commentErrors[field] += messages[key] + ' ';
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
+    onValueChanged(data?: any) {
+    if (!this.commentForm) { return; }
+    const form = this.commentForm;
+    for (const field in this.commentErrors) {
+      if (this.commentErrors.hasOwnProperty(field)) {
+        // clear previous error message (if any)
+        this.commentErrors[field] = '';
+        const control = form.get(field);
+        if (control && control.dirty && !control.valid) {
+          const messages = this.validationCommentMessages[field];
+          for (const key in control.errors) {
+            if (control.errors.hasOwnProperty(key)) {
+              this.commentErrors[field] += messages[key] + ' ';
+            }
+          }
+        }
+      }
+    }
+  }
 
   setPrevNext(dishId: string) {
     const index = this.dishIds.indexOf(dishId);
