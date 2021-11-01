@@ -6,7 +6,7 @@
     fxLayoutGap="10px" 
     fxLayoutGap.xs="0">
 
-    <div fxFlex="40" *ngIf="dish">
+    <div fxFlex="40" *ngIf="dish" [@visibility]="visibility">
         <mat-card>
           <mat-card-header>
             <mat-card-title>
@@ -29,7 +29,7 @@
         </mat-card>
       </div>
 
-  <div fxFlex="40" *ngIf="dish">
+  <div fxFlex="40" *ngIf="dish" [@visibility]="visibility">
     <mat-card-title>
         <h3>Comments</h3>
       </mat-card-title>
@@ -43,18 +43,20 @@
   </div>
 <form novalidate [formGroup]="commentForm" (ngSubmit)="onSubmit()">
       <p>
-        <mat-slider min="1" max="5" step="1" value="1"></mat-slider>
+        
+        <mat-slider formControlName="comment" thumbLabel tickInterval="1" type="range" min="1" max="5" step="1" value="1"></mat-slider>
+        
         <mat-form-field class="half-width">
           <input matInput formControlName="comment" placeholder="Comment" type="text" required>
-          <!-- <mat-error *ngIf="commentForm.comment">{{commentErrors.comment}}</mat-error> -->
+          <mat-error *ngIf="commentErrors.comment">{{commentErrors.comment}}</mat-error>
         </mat-form-field>
         <mat-form-field class="half-width">
           <input matInput formControlName="author" placeholder="Author" type="text" required>
-          <!-- <mat-error *ngIf="commentForm.author">{{commentErrors.author}}</mat-error> -->
+          <mat-error *ngIf="commentErrors.author">{{commentErrors.author}}</mat-error>
         </mat-form-field>
       </p>
      
-      <button type="submit" mat-button class="background-primary text-floral-white">Submit</button>
+      <button type="submit" mat-button class="background-primary text-floral-white" [disabled]="!commentForm.valid">Submit</button>
     </form>
 </div>
 

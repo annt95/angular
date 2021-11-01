@@ -57,30 +57,30 @@ export class ContactComponent implements OnInit {
       contacttype: 'None',
       message: ''
     });
-    // this.feedbackForm.valueChanges
-    //   .subscribe(data => this.onValueChanged(data));
+    this.feedbackForm.valueChanges
+      .subscribe(data => this.onValueChanged(data));
 
-    //this.onValueChanged(); // (re)set validation messages now
+    this.onValueChanged(); // (re)set validation messages now
   }
-  // onValueChanged(data?: any) {
-  //   if (!this.feedbackForm) { return; }
-  //   const form = this.feedbackForm;
-  //   for (const field in this.formErrors) {
-  //     if (this.formErrors.hasOwnProperty(field)) {
-  //       // clear previous error message (if any)
-  //       this.formErrors[field] = '';
-  //       const control = form.get(field);
-  //       if (control && control.dirty && !control.valid) {
-  //         const messages = this.validationMessages[field];
-  //         for (const key in control.errors) {
-  //           if (control.errors.hasOwnProperty(key)) {
-  //             this.formErrors[field] += messages[key] + ' ';
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
+  onValueChanged(data?: any) {
+    if (!this.feedbackForm) { return; }
+    const form = this.feedbackForm;
+    for (const field in this.formErrors) {
+      if (this.formErrors.hasOwnProperty(field)) {
+        // clear previous error message (if any)
+        this.formErrors[field] = '';
+        const control = form.get(field);
+        if (control && control.dirty && !control.valid) {
+          const messages = this.validationMessages[field];
+          for (const key in control.errors) {
+            if (control.errors.hasOwnProperty(key)) {
+              this.formErrors[field] += messages[key] + ' ';
+            }
+          }
+        }
+      }
+    }
+  }
 
   onSubmit() {
     this.feedback = this.feedbackForm.value;

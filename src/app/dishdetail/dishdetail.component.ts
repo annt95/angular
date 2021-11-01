@@ -6,11 +6,15 @@ import { Location } from '@angular/common';
 import { switchMap } from 'rxjs/operators';
 import { Comment } from '../shared/comment';
 import { FormBuilder, FormGroup, Validators,NgForm } from '@angular/forms';
+import { visibility } from '../animations/app.animation';
 
 @Component({
   selector: 'app-dishdetail',
   templateUrl: './dishdetail.component.html',
-  styleUrls: ['./dishdetail.component.scss']
+  styleUrls: ['./dishdetail.component.scss'],
+  animations: [
+    visibility()
+  ]
 })
 export class DishdetailComponent implements OnInit {
   dishIds!: string[];
@@ -20,11 +24,13 @@ export class DishdetailComponent implements OnInit {
   commentForm!: FormGroup;
   comment!: Comment;
   dishcopy: Dish;
+  visibility = 'shown';
   @ViewChild('cform') commentFormDirective!: NgForm;
 
   commentErrors = {
     'comment': '',
     'author': '',
+    'rating': ''
   };
   validationCommentMessages = {
     'comment': {
@@ -51,16 +57,16 @@ export class DishdetailComponent implements OnInit {
   dish!: Dish;
   ngOnInit() {
     this.dishservice.getDishIds().subscribe(dishIds => this.dishIds = dishIds);
-    this.route.params
-      .pipe(switchMap((params: Params) => this.dishservice.getDish(params['id'])))
-      .subscribe(dish => { this.dish = dish; this.dishcopy = dish; this.setPrevNext(dish.id); },
-        errmess => this.errMess = <any>errmess );
+    this.route.params.pipe(switchMap((params: Params) => { this.visibility = 'hidden'; return this.dishservice.getDish(+params['id']); }))
+    .subscribe(dish => { this.dish = dish; this.dishcopy = dish; this.setPrevNext(dish.id); this.visibility = 'shown'; },
+      errmess => this.errMess = <any>errmess);
   }
 
   createCommentForm() {
     this.commentForm = this.cm.group({
       comment: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(25)] ],
-      author: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(25)] ]
+      author: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(25)] ],
+      rating: ''
     });
      this.commentForm.valueChanges
        .subscribe(data => this.onValueChanged(data));
@@ -98,6 +104,8 @@ export class DishdetailComponent implements OnInit {
 
   onSubmit() {
     this.comment = this.commentForm.value;
+    var date = new Date();
+    this.comment.date =  date.toISOString();
     console.log(this.comment);
     this.dishcopy.comments.push(this.comment);
     this.dishservice.putDish(this.dishcopy)
